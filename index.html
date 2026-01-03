@@ -2,10 +2,10 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sürpriz Oyun</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seni Seviyorum DÖV BENİ</title>
     <style>
-        /* --- GENEL TASARIM (MOBİL UYUMLU) --- */
+        /* --- GENEL TASARIM --- */
         body {
             font-family: 'Segoe UI', sans-serif;
             background-color: #2f3640;
@@ -16,35 +16,32 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden; /* Kaydırmayı engelle */
-            user-select: none; /* Yazı seçimini engelle */
+            overflow: hidden;
+            user-select: none; 
             -webkit-user-select: none;
-            touch-action: manipulation; /* Dokunma gecikmesini kaldır */
+            touch-action: manipulation;
         }
 
-        /* --- BARLARIN OLDUĞU ALAN --- */
+        /* --- BARLAR --- */
         .bars-container {
             width: 300px;
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            min-height: 50px; /* Alan sabit kalsın diye */
+            min-height: 50px; 
         }
 
         .bar-wrapper {
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease; 
         }
 
-        /* Nefes barı başlangıçta gizli */
-        #breath-container {
-            opacity: 0; 
-        }
+        #breath-container { opacity: 0; }
 
-        .bar-label { font-weight: bold; font-size: 14px; width: 50px; text-align: right; margin-right: 5px;}
+        .bar-label { font-weight: bold; font-size: 14px; width: 50px; }
 
         .bar-box {
             flex-grow: 1;
@@ -55,12 +52,7 @@
             border: 2px solid #777;
         }
 
-        .bar-fill {
-            height: 100%;
-            width: 100%; 
-            transition: width 0.2s linear; 
-        }
-
+        .bar-fill { height: 100%; width: 100%; transition: width 0.2s linear; }
         #health-fill { background-color: #e74c3c; box-shadow: 0 0 10px #e74c3c; } 
         #breath-fill { background-color: #3498db; box-shadow: 0 0 10px #3498db; } 
 
@@ -76,14 +68,14 @@
         }
 
         .action-btn {
-            padding: 15px 15px; /* Mobilde parmak otursun diye */
+            padding: 12px 15px;
             font-size: 14px;
             cursor: pointer;
             border: none;
             border-radius: 8px;
             color: white;
             font-weight: bold;
-            -webkit-tap-highlight-color: transparent; /* Tıklama efektini kaldır */
+            -webkit-tap-highlight-color: transparent;
         }
 
         #btn-tokat { background-color: #ff9f43; }
@@ -91,15 +83,13 @@
         #btn-tekme { background-color: #2e86de; }
         #btn-bogma { background-color: #5f27cd; }
         
-        /* İyileştir butonu en üstte */
         #btn-reset { 
             background-color: #44bd32; 
             margin-top: 20px; 
-            z-index: 2000; /* Perdenin üstünde */
+            z-index: 2000; 
             width: 200px; 
             padding: 15px;
             position: relative;
-            font-size: 18px;
         }
 
         /* --- KARAKTER SAHNESİ --- */
@@ -119,7 +109,7 @@
             z-index: 1;
         }
 
-        /* --- EFEKTLER (RESİMLER) --- */
+        /* --- EFEKTLER (Resimler) --- */
         .prop {
             position: absolute;
             top: 50%;
@@ -130,9 +120,27 @@
             z-index: 10;
         }
 
-        .emoji-prop { font-size: 100px; }
+        /* Resim Boyutları */
         #prop-bogma { width: 250px; height: auto; }
         #prop-ilac { width: 150px; height: auto; }
+        #prop-yumruk { width: 200px; height: auto; } /* Yeni yumruk boyutu */
+
+        /* --- YENİ EKLENEN: DEV YAZI EFEKTİ --- */
+        #big-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px; /* Mobilde taşmasın diye biraz küçülttüm */
+            font-weight: 900; /* Çok kalın yazı */
+            color: #ff0000; /* Kırmızı */
+            text-shadow: 2px 2px 0px white, -2px -2px 0px white; /* Beyaz kenarlık */
+            opacity: 0;
+            pointer-events: none;
+            z-index: 500; /* Her şeyin üstünde */
+            white-space: nowrap; /* Alt satıra geçmesin */
+            text-align: center;
+        }
 
         /* --- GAME OVER EKRANI --- */
         #game-over-screen {
@@ -160,17 +168,23 @@
             margin-bottom: 20px;
         }
 
-        /* --- ANİMASYONLAR --- */
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        
+
+        /* --- ANİMASYONLAR --- */
         @keyframes slapHand { 0% { transform: translate(-250%, -50%); opacity:1;} 50% { transform: translate(-70%, -40%) ; opacity:1;} 100% { opacity:0; } }
-        @keyframes punchHand { 0% { transform: translate(200%, 70%) scale(0.5) rotate(-45deg); opacity:1;} 50% { transform: translate(-30%, -60%) scale(1.5) rotate(-45deg); opacity:1;} 100% { opacity:0; } }
+        @keyframes punchHand { 0% { transform: translate(200%, 70%) scale(0.5) ; opacity:1;} 50% { transform: translate(-30%, -60%) scale(1); opacity:1;} 100% { opacity:0; } }
         @keyframes kickFoot { 0% { transform: translate(-300%, -300%) scale(0.2) rotate(45deg); opacity:1;} 50% { transform: translate(-200%, -170%); opacity:1; scale: 0.3;} 100% {transform: translate(-200%, -170%) rotate(-45deg); opacity:0; scale: 0.2; } }
-        
         @keyframes chokeProcess { 0% { transform: translate(150%, -50%) scale(1); opacity: 0; } 15% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
-        
         @keyframes healAnim { 0% { transform: translate(-250%, -50%) scale(0.5); opacity: 0; } 30% { transform: translate(-95%, -30%) scale(1.2); opacity: 1; } 70% { transform: translate(-100%, -5%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -150%) scale(0.5); opacity: 0; } }
         
+        /* DEV YAZI ANİMASYONU (Patlama Efekti) */
+        @keyframes textPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } /* Biraz büyür */
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); } /* Normal boya döner */
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); } /* Silinerek büyür */
+        }
+
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
         .apply-shake { animation: shake 0.5s; }
 
@@ -183,6 +197,7 @@
             <span class="bar-label">CAN</span>
             <div class="bar-box"><div id="health-fill" class="bar-fill"></div></div>
         </div>
+        
         <div id="breath-container" class="bar-wrapper">
             <span class="bar-label">NEFES</span>
             <div class="bar-box"><div id="breath-fill" class="bar-fill"></div></div>
@@ -200,20 +215,24 @@
         <img id="the-man" src="normal.png" onerror="this.src='normal.jpg'" alt="Karakter">
         
         <img id="prop-tokat" class="prop" src="tokatel.png">
-        <div id="prop-yumruk" class="prop emoji-prop">🥊</div>
+        
+        <img id="prop-yumruk" class="prop" src="yumrukel.png" alt="Yumruk">
+        
         <img id="prop-tekme" class="prop" src="tekmeayak.png">
         <img id="prop-bogma" class="prop" src="boganel.png">
         <img id="prop-ilac" class="prop" src="ilac.png" alt="İlaç">
+
+        <div id="big-text">OK AHMETT OKKK</div>
     </div>
 
-    <p id="status-text" style="margin-top:20px; font-weight:bold; height: 20px;">Hazır</p>
+    <p id="status-text" style="margin-top:20px; font-weight:bold;">Hazır</p>
     
     <button id="btn-reset" class="action-btn">💊 İyileştir</button>
 
     <div id="game-over-screen">
         <h1 style="color:red; font-size:40px; margin-bottom: 20px;">Oyun Bitti!</h1>
         <img id="game-over-img" src="son.png" alt="Son">
-        <p style="margin-top:20px; color: #ddd;">Tekrar oynamak için "İyileştir"e bas.</p>
+        <p style="margin-top:20px; color: #ddd;">Öldüm İşte Mutlu Musun??.</p>
     </div>
 
     <script>
@@ -225,8 +244,9 @@
         const breathFill = document.getElementById('breath-fill');
         const breathContainer = document.getElementById('breath-container'); 
         const gameOverScreen = document.getElementById('game-over-screen');
+        const bigText = document.getElementById('big-text'); // Dev yazı
 
-        // Oyun Değişkenleri
+        // Değişkenler
         let currentHealth = 100;
         let currentBreath = 100;
         let isGameActive = true;
@@ -234,7 +254,6 @@
         let chokeInterval; 
         let chokeStartTimer; 
 
-        // Resim değiştirici
         function changeImage(imageNameWithExt) {
             if (!isGameActive) return; 
             man.src = imageNameWithExt;
@@ -244,35 +263,32 @@
             };
         }
 
-        // Oyun Bitti Kontrolü
         function checkGameOver() {
             if (currentHealth <= 0 || currentBreath <= 0) {
                 isGameActive = false;
                 
-                // Sayaçları durdur
                 clearInterval(chokeInterval); 
                 clearTimeout(chokeStartTimer);
                 
                 breathContainer.style.opacity = '0'; 
                 document.querySelectorAll('.prop').forEach(el => { el.style.opacity = '0'; });
                 
-                // Game over ekranını aç
+                // Dev yazıyı da gizle oyun bitince
+                bigText.style.opacity = '0';
+
                 gameOverScreen.style.display = 'flex';
                 statusText.textContent = "Eyvah! Adam gitti...";
             }
         }
 
-        // Barları güncelle
         function updateBars() {
             healthFill.style.width = currentHealth + "%";
             breathFill.style.width = currentBreath + "%";
             
-            // Can azalınca koyulaşsın
             if(currentHealth < 30) healthFill.style.backgroundColor = "#c0392b";
             else healthFill.style.backgroundColor = "#e74c3c";
         }
 
-        // Gecikmeli yazı
         function yaziGetir(metin, saniye) {
             if (!isGameActive) return;
             statusText.textContent = ""; 
@@ -284,24 +300,21 @@
             }, saniye * 1000); 
         }
 
-        // --- ANA FONKSİYON ---
         function playAction(type) {
             if (!isGameActive) return; 
 
-            // Eğer boğma DEĞİLSE, nefesi fulle ve boğulmayı iptal et
-            if (type !== 'bogma') {
-                clearInterval(chokeInterval);
-                clearTimeout(chokeStartTimer);
-                currentBreath = 100;
-                updateBars();
-                breathContainer.style.opacity = '0'; // Nefes barını gizle
-            }
+            // Temizlik
+            clearInterval(chokeInterval); 
+            clearTimeout(chokeStartTimer);
 
-            // Ekrandaki diğer efektleri temizle
+            // Efektleri Temizle
             document.querySelectorAll('.prop').forEach(el => {
                 el.style.animation = 'none';
                 el.style.opacity = '0';
             });
+            // Dev yazıyı temizle (Her vuruşta sıfırlansın)
+            bigText.style.animation = 'none';
+            bigText.style.opacity = '0';
 
             const prop = document.getElementById('prop-' + type);
             if (prop) {
@@ -313,19 +326,16 @@
                     statusText.textContent = ""; 
                     prop.style.animation = 'chokeProcess 1s ease-in-out forwards'; 
                     
-                    // Nefes barını göster
                     breathContainer.style.opacity = '1';
 
-                    // Gecikmeli nefes azaltma (1 saniye sonra)
                     chokeStartTimer = setTimeout(() => {
                         chokeInterval = setInterval(() => {
                             currentBreath -= 2; 
                             updateBars();
                             checkGameOver();
                         }, 100);
-                    }, 1000); 
+                    }, 1000);
 
-                    // Resim değişimi
                     setTimeout(() => {
                         changeImage('bogan.png'); 
                         man.classList.add('apply-shake'); 
@@ -335,11 +345,13 @@
                 } 
                 // --- DİĞERLERİ ---
                 else {
-                    // HASAR PUANLARI (Azaltılmış hali)
-                    if(type === 'tokat') currentHealth -= 5;
-                    if(type === 'yumruk') currentHealth -= 10;
-                    if(type === 'tekme') currentHealth -= 15;
-                    
+                    currentBreath = 100;
+                    updateBars();
+                    breathContainer.style.opacity = '0'; 
+
+                    if(type === 'tokat') currentHealth -= 2;
+                    if(type === 'yumruk') currentHealth -= 5;
+                    if(type === 'tekme') currentHealth -= 10;
                     updateBars();
                     checkGameOver();
                     
@@ -353,8 +365,12 @@
                         yaziGetir("Bitanem bu acıdı ama yüzüm kızardı ya!", 0.3);
                     }
                     if(type === 'yumruk') {
-                        prop.style.animation = 'punchHand 0.4s forwards';
+                        prop.style.animation = 'punchHand 0.8s forwards';
                         setTimeout(() => changeImage('yumruk.png'), 200);
+                        
+                        // YUMRUK İÇİN ÖZEL DEV YAZI
+                        bigText.style.animation = 'textPop 1.5s ease-out forwards';
+
                         yaziGetir("Benim bi sol gözüm vardı ya artık yok!", 0.3);
                     }
                     if(type === 'tekme') {
@@ -369,30 +385,26 @@
             }
         }
 
-        // Buton Dinleyicileri
         document.getElementById('btn-tokat').addEventListener('click', () => playAction('tokat'));
         document.getElementById('btn-yumruk').addEventListener('click', () => playAction('yumruk'));
         document.getElementById('btn-tekme').addEventListener('click', () => playAction('tekme'));
         document.getElementById('btn-bogma').addEventListener('click', () => playAction('bogma'));
 
-        // --- İYİLEŞTİRME ---
         document.getElementById('btn-reset').addEventListener('click', () => {
             
-            // Oyunu sıfırla
             gameOverScreen.style.display = 'none'; 
             isGameActive = true;
             
             currentHealth = 100;
             currentBreath = 100;
             updateBars();
-            
             clearInterval(chokeInterval);
             clearTimeout(chokeStartTimer);
             breathContainer.style.opacity = '0'; 
+            bigText.style.opacity = '0'; // Yazıyı gizle
 
             statusText.textContent = "İyileştiriliyor...";
             
-            // İlaç animasyonu
             const ilac = document.getElementById('prop-ilac');
             ilac.style.animation = 'none';
             ilac.offsetHeight; 
@@ -415,6 +427,3 @@
     </script>
 </body>
 </html>
-
-
-
